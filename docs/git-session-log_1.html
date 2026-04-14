@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Session Log — Git & Audio DAC</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: #fff;
+    color: #111;
+    padding: 36px 44px;
+    max-width: 860px;
+    margin: 0 auto;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  header {
+    border-bottom: 3px solid #111;
+    padding-bottom: 10px;
+    margin-bottom: 30px;
+  }
+
+  header h1 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+  }
+
+  header h1 span { color: #e05c00; }
+
+  header p {
+    font-size: 11px;
+    color: #888;
+    margin-top: 4px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .entry {
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px dashed #ccc;
+  }
+
+  .entry:last-child { border-bottom: none; }
+
+  .question {
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+    margin-bottom: 10px;
+  }
+
+  .q-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    color: #e05c00;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    white-space: nowrap;
+    padding-top: 1px;
+  }
+
+  .q-text {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #111;
+  }
+
+  .a-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    color: #0057e0;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    white-space: nowrap;
+    padding-top: 1px;
+  }
+
+  .answer {
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+  }
+
+  .answer-body { flex: 1; }
+
+  p { margin-bottom: 8px; }
+
+  pre {
+    background: #f4f4f4;
+    border-left: 3px solid #e05c00;
+    padding: 10px 14px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    line-height: 1.7;
+    overflow-x: auto;
+    margin: 8px 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    background: #f0f0f0;
+    padding: 1px 5px;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 8px 0;
+    font-size: 12px;
+  }
+
+  th {
+    background: #111;
+    color: #fff;
+    padding: 6px 10px;
+    text-align: left;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+  }
+
+  td {
+    padding: 6px 10px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: #fafafa; }
+
+  .note {
+    font-size: 11px;
+    color: #666;
+    font-style: italic;
+    margin-top: 6px;
+  }
+
+  footer {
+    margin-top: 30px;
+    font-size: 10px;
+    color: #aaa;
+    font-family: 'IBM Plex Mono', monospace;
+    text-align: right;
+  }
+
+  @media print {
+    body { padding: 20px; }
+    @page { margin: 1.2cm; }
+    pre { font-size: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>SESSION LOG <span>//</span> Git & Tools</h1>
+  <p>topic: git push · personal token · auto-watcher · hidden files · audio DAC · printable reference</p>
+</header>
+
+<!-- 1 -->
+<div class="entry">
+  <div class="question">
+    <span class="q-label">Q</span>
+    <span class="q-text">git push command</span>
+  </div>
+  <div class="answer">
+    <span class="a-label">A</span>
+    <div class="answer-body">
+      <pre>git push origin main</pre>
+      <p><strong>Common variants:</strong></p>
+      <pre>git push -u origin main          # first push, sets upstream
+git push origin your-branch-name  # push specific branch
+git push --force origin main      # force push ⚠
+git push --all origin             # all branches
+git push --tags origin            # push tags</pre>
+      <p><strong>Typical full workflow:</strong></p>
+      <pre>git add .
+git commit -m "your message"
+git push origin main</pre>
+    </div>
+  </div>
+</div>
+
+<!-- 2 -->
+<div class="entry">
+  <div class="question">
+    <span class="q-label">Q</span>
+    <span class="q-text">From /Users/alexchiomny/eclipse-workspace/test1 to https://github.com/student45667/test1.git</span>
+  </div>
+  <div class="answer">
+    <span class="a-label">A</span>
+    <div class="answer-body">
+      <pre>cd /Users/alexchiomny/eclipse-workspace/test1
+
+git init
+git add .
+git commit -m "initial commit"
+git branch -M main
+git remote add origin https://github.com/student45667/test1.git
+git push -u origin main</pre>
+      <p class="note">Use a Personal Access Token as password — not your GitHub password.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 3 -->
+<div class="entry">
+  <div class="question">
+    <span class="q-label">Q</span>
+    <span class="q-text">How git push will look with personal token</span>
+  </div>
+  <div class="answer">
+    <span class="a-label">A</span>
+    <div class="answer-body">
+      <pre>git push https://&lt;your-token&gt;@github.com/student45667/test1.git main
+
+# Real example:
+git push https://ghp_xxxxxxxxxxxxxxxxxxxx@github.com/student45667/test1.git main</pre>
+      <p><strong>Bake token into remote URL (do once):</strong></p>
+      <pre>git remote set-url origin https://ghp_xxxxxxxxxxxxxxxxxxxx@github.com/student45667/test1.git
+
+# Then just:
+git push origin main</pre>
+    </div>
+  </div>
+</div>
+
+<!-- 4 -->
+<div class="entry">
+  <div class="question">
+    <span class="q-label">Q</span>
+    <span class="q-text">Where to find the token</span>
+  </div>
+  <div class="answer">
+    <span class="a-label">A</span>
+    <div class="answer-body">
+      <pre>GitHub → Profile picture → Settings → Developer Settings
+→ Personal access tokens → Tokens (classic)
+→ Generate new token (classic)
+→ Check "repo" scope → Generate → Copy immediately</pre>
+      <p>Direct link: <code>https://github.com/settings/tokens</code></p>
+      <p class="note">⚠ GitHub shows the token only once — save it immediately in a password manager.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 5 -->
+<div class="entry">
+  <div class="question">
+    <span class="q-label">Q</span>
+    <span class="q-text">Create bash that streams updated files to repo</span>
+  </div>
+  <div class="answer">
+    <span class="a-label">A</span>
+    <div class="answer-body">
+      <p><strong>Polling version (watch_push.sh):</strong></p>
+      <pre>#!/bin/bash
+
+WATCH_DIR="/Users/alexchiomny/eclipse-workspace/test1"
+REMOTE="https://ghp_xxxxxxxxxxxxxxxxxxxx@github.com/student45667/test1.git"
+BRANCH="main"
+INTERVAL=10
+
+cd "$WATCH_DIR" || exit 1
+echo "👀 Watching $WATCH_DIR every ${INTERVAL}s..."
+
+while true; do
+    if ! git diff --quiet || ! git diff --cached --quiet || [ -n "$(git status --porcelain)" ]; then
+        echo "📦 Changes detected at $(date '+%H:%M:%S')"
+        git add .
+        git commit -m "auto: $(date '+%Y-%m-%d %H:%M:%S')"
+        if git push "$REMOTE" "$BRANCH"; then
+            echo "✅ Pushed successfully"
+        else
+            echo "❌ Push failed"
+        fi
+    else
+        echo "⏳ No changes at $(date '+%H:%M:%S')"
+    fi
+    sleep "$INTERVAL"
+done</pre>
+      <pre>chmod +x watch_push.sh
+./watch_push.sh</pre>
+      <p><strong>Event-driven version with fswatch (recommended):</strong></p>
+      <pre>brew install fswatch
+
+fswatch -o /Users/alexchiomny/eclipse-workspace/test1 | while read; do
+    cd /Users/alexchiomny/eclipse-workspace/test1
+    git add .
+    git commit -m "auto: $(date '+%Y-%m-%d %H:%M:%S')"
+    git push https://ghp_xxxxxxxxxxxxxxxxxxxx@github.com/student45667/test1.git main
+    echo "✅ Pushed at $(date '+%H:%M:%S')"
+done</pre>
+      <p class="note">fswatch fires instantly on file change — better than polling every N seconds.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 6 -->
+<div class="entry">
+  <div class="question">
+    <span class="q-label">Q</span>
+    <span class="q-text">How to make hidden files visible on Finder</span>
+  </div>
+  <div class="answer">
+    <span class="a-label">A</span>
+    <div class="answer-body">
+      <p><strong>Keyboard shortcut (fastest):</strong></p>
+      <pre>CMD + SHIFT + .</pre>
+      <p><strong>Terminal (permanent):</strong></p>
+      <pre># Show
+defaults write com.apple.finder AppleShowAllFiles true
+killall Finder
+
+# Hide again
+defaults write com.apple.finder AppleShowAllFiles false
+killall Finder</pre>
+    </div>
+  </div>
+</div>
+
+<!-- 7 -->
+<div class="entry">
+  <div class="question">
+    <span class="q-label">Q</span>
+    <span class="q-text">Short summary for git — printable HTML</span>
+  </div>
+  <div class="answer">
+    <span class="a-label">A</span>
+    <div class="answer-body">
+      <p>Generated <code>git-summary.html</code> — one-page printable reference covering setup, daily workflow, push variants, branches, history, undo, token push, and fswatch watcher.</p>
+    </div>
+  </div>
+</div>
+
+<footer>session log · git-session-log.html · claude.ai</footer>
+
+</body>
+</html>
