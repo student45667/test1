@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python — A Practical Guide for C Programmers</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f7f5f0;
+  --surface: #ffffff;
+  --ink: #1a1a18;
+  --muted: #6b6b62;
+  --faint: #e8e5df;
+  --accent: #c8401a;
+  --accent-light: #f5ece8;
+  --green: #2d6a4f;
+  --green-light: #e8f5ee;
+  --blue: #1a4a7a;
+  --blue-light: #e8f0f8;
+  --amber: #8a5c00;
+  --amber-light: #fef7e0;
+  --code-bg: #1e1e2a;
+  --code-text: #cdd6f4;
+  --radius: 8px;
+  --radius-lg: 14px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* Layout */
+.page { max-width: 860px; margin: 0 auto; padding: 0 24px 80px; }
+
+/* Nav sidebar */
+nav {
+  position: fixed;
+  left: 0; top: 0; bottom: 0;
+  width: 220px;
+  background: var(--surface);
+  border-right: 1px solid var(--faint);
+  padding: 32px 0;
+  overflow-y: auto;
+  z-index: 100;
+}
+nav .nav-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  color: var(--muted);
+  padding: 0 20px 12px;
+  text-transform: uppercase;
+}
+nav a {
+  display: block;
+  padding: 6px 20px;
+  font-size: 13.5px;
+  color: var(--muted);
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  transition: all .15s;
+}
+nav a:hover { color: var(--ink); border-left-color: var(--faint); }
+nav a.active { color: var(--accent); border-left-color: var(--accent); font-weight: 500; }
+nav .nav-section { margin-top: 16px; }
+nav .nav-group {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: 8px 20px 4px;
+}
+
+.main { margin-left: 220px; }
+
+/* Hero */
+.hero {
+  padding: 72px 0 56px;
+  border-bottom: 1px solid var(--faint);
+  margin-bottom: 64px;
+}
+.hero .label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .15em;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.hero h1 {
+  font-family: 'Lora', serif;
+  font-size: clamp(32px, 5vw, 52px);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--ink);
+  margin-bottom: 20px;
+}
+.hero h1 em { font-style: italic; color: var(--accent); }
+.hero .subtitle {
+  font-size: 17px;
+  color: var(--muted);
+  max-width: 580px;
+  line-height: 1.65;
+  margin-bottom: 28px;
+}
+.hero-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.hero-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  padding: 4px 10px;
+  background: var(--faint);
+  border-radius: 4px;
+  color: var(--muted);
+}
+
+/* Sections */
+.section {
+  margin-bottom: 72px;
+  scroll-margin-top: 32px;
+}
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 28px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--faint);
+}
+.section-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: .05em;
+}
+.section h2 {
+  font-family: 'Lora', serif;
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* Subsections */
+.subsection { margin-bottom: 36px; }
+.subsection h3 {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+
+p {
+  color: var(--muted);
+  margin-bottom: 14px;
+  font-size: 15px;
+}
+p:last-child { margin-bottom: 0; }
+p strong { color: var(--ink); font-weight: 500; }
+
+/* Code blocks */
+pre {
+  background: var(--code-bg);
+  border-radius: var(--radius-lg);
+  padding: 20px 22px;
+  overflow-x: auto;
+  margin: 14px 0;
+  position: relative;
+  border: 1px solid #2a2a3a;
+}
+pre .lang-label {
+  position: absolute;
+  top: 10px; right: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: #555570;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 1.85;
+  color: var(--code-text);
+}
+p code, li code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  background: var(--faint);
+  padding: 1px 6px;
+  border-radius: 4px;
+  color: var(--accent);
+}
+
+/* Syntax colors */
+.kw  { color: #cba6f7; }
+.fn  { color: #89b4fa; }
+.st  { color: #a6e3a1; }
+.cm  { color: #585b80; font-style: italic; }
+.nb  { color: #f9e2af; }
+.op  { color: #89dceb; }
+.nu  { color: #fab387; }
+
+/* Callout boxes */
+.callout {
+  padding: 14px 18px;
+  border-radius: var(--radius);
+  margin: 16px 0;
+  font-size: 14px;
+  line-height: 1.65;
+}
+.callout strong { display: block; margin-bottom: 4px; font-size: 13px; letter-spacing: .03em; }
+.callout.warning {
+  background: var(--amber-light);
+  border-left: 3px solid var(--amber);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  color: var(--ink);
+}
+.callout.warning strong { color: var(--amber); }
+.callout.tip {
+  background: var(--green-light);
+  border-left: 3px solid var(--green);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  color: var(--ink);
+}
+.callout.tip strong { color: var(--green); }
+.callout.info {
+  background: var(--blue-light);
+  border-left: 3px solid var(--blue);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  color: var(--ink);
+}
+.callout.info strong { color: var(--blue); }
+
+/* Grid layouts */
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 16px 0; }
+.card {
+  background: var(--surface);
+  border: 1px solid var(--faint);
+  border-radius: var(--radius-lg);
+  padding: 20px 22px;
+}
+.card h4 { font-size: 14px; font-weight: 500; margin-bottom: 10px; color: var(--ink); }
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin: 14px 0;
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--faint);
+}
+th {
+  text-align: left;
+  padding: 10px 16px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  background: var(--bg);
+  border-bottom: 1px solid var(--faint);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--faint);
+  color: var(--ink);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+}
+td.desc { font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--muted); }
+tr:last-child td { border-bottom: none; }
+
+/* Library cards */
+.lib-card {
+  background: var(--surface);
+  border: 1px solid var(--faint);
+  border-radius: var(--radius-lg);
+  padding: 24px 26px;
+  margin-bottom: 20px;
+}
+.lib-card .lib-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.lib-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 4px;
+  background: var(--code-bg);
+  color: #89b4fa;
+}
+.lib-card h3 { font-size: 16px; font-weight: 500; color: var(--ink); }
+.lib-card .lib-desc { font-size: 14px; color: var(--muted); margin-bottom: 14px; }
+.install {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  background: var(--faint);
+  padding: 5px 12px;
+  border-radius: 4px;
+  color: var(--green);
+  margin-bottom: 12px;
+}
+
+/* TOC in hero */
+.toc {
+  background: var(--surface);
+  border: 1px solid var(--faint);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  margin-top: 32px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 4px 24px;
+}
+.toc a {
+  display: block;
+  font-size: 13.5px;
+  color: var(--muted);
+  text-decoration: none;
+  padding: 4px 0;
+  transition: color .15s;
+}
+.toc a:hover { color: var(--accent); }
+.toc a span {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--accent);
+  margin-right: 8px;
+}
+
+@media (max-width: 700px) {
+  nav { display: none; }
+  .main { margin-left: 0; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-title">Python Guide</div>
+  <div class="nav-section">
+    <div class="nav-group">Fundamentals</div>
+    <a href="#basics">01 — Basics &amp; syntax</a>
+    <a href="#types">02 — Types &amp; casting</a>
+    <a href="#strings">03 — Strings</a>
+    <a href="#math">04 — Math &amp; operators</a>
+    <a href="#io">05 — Input / output</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-group">Control &amp; structure</div>
+    <a href="#ds">06 — Data structures</a>
+    <a href="#loops">07 — Loops</a>
+    <a href="#conditionals">08 — Conditionals</a>
+    <a href="#functions">09 — Functions</a>
+    <a href="#errors">10 — Error handling</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-group">Libraries</div>
+    <a href="#stdlib">11 — Standard library</a>
+    <a href="#numpy">12 — NumPy</a>
+    <a href="#pandas">13 — Pandas</a>
+    <a href="#plotting">14 — Plotting</a>
+    <a href="#scraping">15 — Web scraping</a>
+    <a href="#ml">16 — Machine learning</a>
+  </div>
+</nav>
+
+<div class="main">
+<div class="page">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="label">A practical guide · April 2026</div>
+  <h1>Python for the<br><em>C programmer</em></h1>
+  <p class="subtitle">
+    A readable, example-driven reference covering the full language — from variables and loops to data analysis, visualization, and AI libraries. Written for engineers who already know how to think in code.
+  </p>
+  <div class="hero-tags">
+    <span class="hero-tag">No semicolons</span>
+    <span class="hero-tag">No braces</span>
+    <span class="hero-tag">No malloc</span>
+    <span class="hero-tag">Indentation = structure</span>
+    <span class="hero-tag">Types are inferred</span>
+    <span class="hero-tag">Python 3.10+</span>
+  </div>
+  <div class="toc">
+    <a href="#basics"><span>01</span>Basics &amp; syntax</a>
+    <a href="#types"><span>02</span>Types &amp; casting</a>
+    <a href="#strings"><span>03</span>Strings</a>
+    <a href="#math"><span>04</span>Math &amp; operators</a>
+    <a href="#io"><span>05</span>Input / output</a>
+    <a href="#ds"><span>06</span>Data structures</a>
+    <a href="#loops"><span>07</span>Loops</a>
+    <a href="#conditionals"><span>08</span>Conditionals</a>
+    <a href="#functions"><span>09</span>Functions</a>
+    <a href="#errors"><span>10</span>Error handling</a>
+    <a href="#stdlib"><span>11</span>Standard library</a>
+    <a href="#numpy"><span>12</span>NumPy</a>
+    <a href="#pandas"><span>13</span>Pandas</a>
+    <a href="#plotting"><span>14</span>Plotting</a>
+    <a href="#scraping"><span>15</span>Web scraping</a>
+    <a href="#ml"><span>16</span>Machine learning</a>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     01 — BASICS
+════════════════════════════════════════════ -->
+<div class="section" id="basics">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2>Basics &amp; syntax</h2>
+  </div>
+
+  <div class="callout warning">
+    <strong>Coming from C</strong>
+    No semicolons. No curly braces. No type declarations. Indentation is the structure — 4 spaces per level is the universal convention. Python figures out types at runtime.
+  </div>
+
+  <div class="subsection">
+    <h3>Variables</h3>
+    <p>Just assign. Python infers the type. No declaration keyword needed.</p>
+    <pre><code><span class="nb">x</span>       = <span class="nu">10</span>          <span class="cm"># int — like: int x = 10;</span>
+<span class="nb">pi</span>      = <span class="nu">3.14</span>        <span class="cm"># float</span>
+<span class="nb">name</span>    = <span class="st">"Alex"</span>     <span class="cm"># string</span>
+<span class="nb">done</span>    = <span class="kw">True</span>        <span class="cm"># bool — capital T/F</span>
+<span class="nb">nothing</span> = <span class="kw">None</span>        <span class="cm"># like NULL in C</span>
+
+<span class="fn">print</span>(<span class="fn">type</span>(x))        <span class="cm"># &lt;class 'int'&gt;</span>
+<span class="fn">print</span>(<span class="fn">type</span>(name))     <span class="cm"># &lt;class 'str'&gt;</span>
+<div class="lang-label">python</div></code></pre>
+  </div>
+
+  <div class="subsection">
+    <h3>Multiple assignment</h3>
+    <pre><code><span class="nb">a</span>, <span class="nb">b</span>, <span class="nb">c</span> = <span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>
+<span class="fn">print</span>(a, b, c)       <span class="cm"># 1 2 3</span>
+
+<span class="nb">x</span> = <span class="nb">y</span> = <span class="nu">0</span>            <span class="cm"># both equal 0</span>
+
+<span class="cm"># Swap — no temp variable needed</span>
+<span class="nb">a</span>, <span class="nb">b</span> = <span class="nb">b</span>, <span class="nb">a</span>
+<span class="fn">print</span>(a, b)          <span class="cm"># 2 1</span>
+<div class="lang-label">python</div></code></pre>
+  </div>
+
+  <div class="subsection">
+    <h3>Indentation instead of braces</h3>
+    <p>4 spaces = one level. This is syntax, not style. Mixing tabs and spaces causes errors.</p>
+    <pre><code><span class="kw">if</span> x > <span class="nu">5</span>:
+    <span class="fn">print</span>(<span class="st">"big"</span>)    <span class="cm"># inside the if block</span>
+    x += <span class="nu">1</span>
+<span class="fn">print</span>(<span class="st">"done"</span>)      <span class="cm"># back at column 0 — outside the if</span>
+<div class="lang-label">python</div></code></pre>
+  </div>
+
+  <div class="subsection">
+    <h3>Importing libraries</h3>
+    <p>Like <code>#include</code> but more flexible. You can import a whole module, alias it, or pull out one function.</p>
+    <pre><code><span class="kw">import</span> math                  <span class="cm"># whole module</span>
+<span class="kw">import</span> math <span class="kw">as</span> m             <span class="cm"># with alias</span>
+<span class="kw">from</span> math <span class="kw">import</span> sqrt        <span class="cm"># just one function</span>
+
+<span class="fn">print</span>(math.<span class="fn">sqrt</span>(<span class="nu">16</span>))        <span class="cm"># 4.0</span>
+<span class="fn">print</span>(m.<span class="fn">sqrt</span>(<span class="nu">16</span>))           <span class="cm"># 4.0 (alias)</span>
+<span class="fn">print</span>(<span class="fn">sqrt</span>(<span class="nu">16</span>))             <span class="cm"># 4.0 (direct import)</span>
+<div class="lang-label">python</div></code></pre>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     02 — TYPES & CASTING
+════════════════════════════════════════════ -->
+<div class="section" id="types">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2>Types &amp; casting</h2>
+  </div>
+
+  <div class="subsection">
+    <h3>Explicit type casting</h3>
+    <p>Python won't auto-convert between types. You cast manually using built-in functions.</p>
+    <pre><code><span class="cm"># int() — convert to integer</span>
+<span class="fn">int</span>(<span class="st">"42"</span>)        <span class="cm"># → 42</span>
+<span class="fn">int</span>(<span class="nu">3.9</span>)         <span class="cm"># → 3  (truncates, does NOT round!)</span>
+<span class="fn">int</span>(<span class="st">"0xFF"</span>, <span class="nu">16</span>)  <span class="cm"># → 255 (hex string)</span>
+<span class="fn">int</span>(<span class="st">"1011"</span>, <span class="nu">2</span>)   <span class="cm"># → 11  (binary string)</span>
+
+<span class="cm"># float()</span>
+<span class="fn">float</span>(<span class="st">"3.14"</span>)    <span class="cm"># → 3.14</span>
+<span class="fn">float</span>(<span class="nu">7</span>)         <span class="cm"># → 7.0</span>
+<span class="fn">float</span>(<span class="st">"inf"</span>)    <span class="cm"># → inf  (infinity is valid!)</span>
+
+<span class="cm"># str()</span>
+<span class="fn">str</span>(<span class="nu">42</span>)          <span class="cm"># → "42"</span>
+<span class="fn">str</span>(<span class="nu">3.14</span>)        <span class="cm"># → "3.14"</span>
+<span class="fn">str</span>(<span class="kw">True</span>)        <span class="cm"># → "True"</span>
+
+<span class="cm"># bool()</span>
+<span class="fn">bool</span>(<span class="nu">0</span>)          <span class="cm"># → False</span>
+<span class="fn">bool</span>(<span class="nu">42</span>)         <span class="cm"># → True  (any nonzero)</span>
+<span class="fn">bool</span>(<span class="st">""</span>)         <span class="cm"># → False (empty string)</span>
+<span class="fn">bool</span>([])         <span class="cm"># → False (empty list)</span>
+<span class="fn">bool</span>(<span class="kw">None</span>)       <span class="cm"># → False</span>
+<div class="lang-label">python</div></code></pre>
+
+    <div class="callout warning">
+      <strong>C habit alert — int() truncates, not rounds</strong>
+      <code>int(3.9)</code> gives <code>3</code>, not <code>4</code>. Use <code>round(3.9)</code> if you want rounding.
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>Checking types</h3>
+    <pre><code>x = <span class="nu">42</span>
+
+<span class="cm"># type() — returns the exact type</span>
+<span class="fn">print</span>(<span class="fn">type</span>(x))              <span class="cm"># &lt;class 'int'&gt;</span>
+<span class="fn">type</span>(x) == <span class="fn">int</span>              <span class="cm"># True</span>
+
+<span class="cm"># isinstance() — preferred, handles subclasses</span>
+<span class="fn">isinstance</span>(x, <span class="fn">int</span>)         <span class="cm"># True</span>
+<span class="fn">isinstance</span>(x, (int, <span class="fn">float</span>)) <span class="cm"># True — check multiple at once</span>
+<span class="fn">isinstance</span>(<span class="kw">True</span>, <span class="fn">int</span>)      <span class="cm"># True! bool is a subclass of int</span>
+<div class="lang-label">python</div></code></pre>
+  </div>
+
+  <div class="subsection">
+    <h3>Constants — the convention</h3>
+    <p>Python has no <code>const</code> keyword. ALL_CAPS names signal "treat this as constant." Python won't stop you reassigning — it's an honor system. For true immutability, use a frozen dataclass.</p>
+    <pre><code><span class="cm"># Convention: ALL_CAPS = constant</span>
+MAX_VOLTAGE    = <span class="nu">3.3</span>
+SAMPLE_RATE    = <span class="nu">1_000_000</span>      <span class="cm"># underscores = readable separator</span>
+SPEED_OF_LIGHT = <span class="nu">299_792_458</span>
+
+<span class="cm"># Enforced immutability with frozen dataclass</span>
+<span class="kw">from</span> dataclasses <span class="kw">import</span> dataclass
+
+<span class="op">@</span><span class="fn">dataclass</span>(frozen=<span class="kw">True</span>)
+<span class="kw">class</span> <span class="nb">Config</span>:
+    max_freq : <span class="fn">int</span>   = <span class="nu">6_000_000_000</span>
+    vdd      : <span class="fn">float</span> = <span class="nu">3.3</span>
+    layers   : <span class="fn">int</span>   = <span class="nu">8</span>
+
+cfg = <span class="fn">Config</span>()
+<span class="fn">print</span>(cfg.vdd)      <span class="cm"># 3.3</span>
+cfg.vdd = <span class="nu">1.8</span>       <span class="cm"># FrozenInstanceError — actually enforced!</span>
+<div class="lang-label">python</div></code></pre>
+  </div>
+
+  <div class="subsection">
+    <h3>Type hints (optional, recommended)</h3>
+    <p>Python is dynamically typed, but you can annotate for clarity and IDE support. Hints are not enforced at runtime — they're documentation.</p>
+    <pre><code>voltage : <span class="fn">float</span> = <span class="nu">3.3</span>
+count   : <span class="fn">int</span>   = <span class="nu">0</span>
+name    : <span class="fn">str</span>   = <span class="st">"Alex"</span>
+
+<span class="cm"># Function type hints — like C prototypes but optional</span>
+<span class="kw">def</span> <span class="fn">resistance</span>(v: <span class="fn">float</span>, i: <span class="fn">float</span>) -> <span class="fn">float</span>:
+    <span class="kw">return</span> v / i
+
+<span class="cm"># List / Optional</span>
+<span class="kw">from</span> typing <span class="kw">import</span> List, Optional
+
+<span class="kw">def</span> <span class="fn">average</span>(nums: List[<span class="fn">float</span>]) -> <span class="fn">float</span>:
+    <span class="kw">return</span> <span class="fn">sum</span>(nums) / <span class="fn">len</span>(nums)
+
+<span class="kw">def</span> <span class="fn">find</span>(name: <span class="fn">str</span>) -> Optional[<span class="fn">int</span>]:  <span class="cm"># might return None</span>
+    ...
+<div class="lang-label">python</div></code></pre>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     03 — STRINGS
+════════════════════════════════════════════ -->
+<div class="section" id="strings">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2>Strings</h2>
+  </div>
+
+  <div class="subsection">
+    <h3>Creating strings &amp; indexing</h3>
+    <pre><code>s = <span class="st">"Hello, World"</span>
+s2 = <span class="st">'single quotes also fine'</span>
+s3 = <span class="st">"""
+multi-line
+string
+"""</span>
+
+<span class="fn">print</span>(<span class="fn">len</span>(s))        <span class="cm"># 12</span>
+<span class="fn">print</span>(s[<span class="nu">0</span>])          <span class="cm"># H  (zero-indexed, like C)</span>
+<span class="fn">print</span>(s[-<span class="nu">1</span>])         <span class="cm"># d  (last character)</span>
+<span class="fn">print</span>(s[<span class="nu">0</span>:<span class="nu">5</span>])        <span class="cm"># Hello  (slicing)</span>
+<span class="fn">print</span>(s[<span class="nu">7</span>:])         <span class="cm"># World  (to end)</span>
+<span class="fn">print</span>(s[::<span class="nu">2</span>])        <span class="cm"># Hlo ol  (every 2nd char)</span>
+<span class="fn">print</span>(s[::-<span class="nu">1</span>])       <span class="cm"># dlroW ,olleH  (reversed!)</span>
+<div class="lang-label">python</div></code></pre>
+  </div>
+
+  <div class="subsection">
+    <h3>f-strings — modern formatting</h3>
+    <p>Prefix with <code>f</code>. Expressions go in <code>{}</code>. Replaces printf and .format().</p>
+    <pre><code>name  = <span class="st">"Alex"</span>
+score = <span class="nu">97.5</span>
+volts = <span class="nu">1234567</span>
+
+<span class="fn">print</span>(<span class="st">f"Name: </span>{name}<span class="st">"</span>)
+<span class="fn">print</span>(<span class="st">f"Score: </span>{score:.2f}<span class="st">"</span>)      <span class="cm"># 97.50</span>
+<span class="fn">print</span>(<span class="st">f"</span>{volts:,}<span class="st">"</span>)               <span class="cm"># 1,234,567</span>
+<span class="fn">print</span>(<span class="st">f"</span>{<span class="nu">255</span>:<span class="nu">08</span>b}<span class="st">"</span>)              <span class="cm"># 11111111 (binary)</span>
+<span class="fn">print</span>(<span class="st">f"</span>{<span class="nu">255</span>:#x}<span class="st">"</span>)               <span class="cm"># 0xff (hex)</span>
+<span class="fn">print</span>(<span class="st">f"</span>{name.upper()}<span class="st"> scored </span>{score:.0f}<span class="st">"</span>)
+<div class="lang-label">python</div></code></pre>
+  </div>
+
+  <div class="subsection">
+    <h3>Common string methods</h3>
+    <pre><code>s = <span class="st">"  Hello World  "</span>
+
+s.<span class="fn">upper</span>()                      <span class="cm"># "  HELLO WORLD  "</span>
+s.<span class="fn">lower</span>()                      <span class="cm"># "  hello world  "</span>
+s.<span class="fn">strip</span>()                      <span class="cm"># "Hello World"</span>
+s.<span class="fn">strip</span>().<span class="fn">replace</span>(<span class="st">"World"</span>,<span class="st">"Python"</span>) <span class="cm"># "Hello Python"</span>
+s.<span class="fn">split</span>()                      <span class="cm"># ['Hello', 'World']</span>
+<span class="st">"-"</span>.<span class="fn">join</span>([<span class="st">"a"</span>,<span class="st">"b"</span>,<span class="st">"c"</span>])        <span class="cm"># "a-b-c"</span>
+s.<span class="fn">startswith</span>(<span class="st">"  H"</span>)            <span class="cm"># True</span>
+s.<span class="fn">find</span>(<span class="st">"World"</span>)                <span class="cm"># 8 (index), -1 if not found</span>
+s.<span class="fn">count</span>(<span class="st">"l"</span>)                   <span class="cm"># 3</span>
+<div class="lang-label">python</div></code></pre>
+
+    <div class="callout info">
+      <strong>Strings are immutable</strong>
+      Unlike C char arrays, you cannot change a character in-place. <code>s[0] = "h"</code> raises a TypeError. To modify, create a new string: <code>s = "h" + s[1:]</code>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     04 — MATH & OPERATORS
+════════════════════════════════════════════ -->
+<div class="section" id="math">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <h2>Math &amp; operators</h2>
+  </div>
+
+  <table>
+    <tr><th>Operator</th><th>Meaning</th><th>Example</th><th class="desc">Result</th></tr>
+    <tr><td>+</td><td>add</td><td>5 + 3</td><td class="desc">8</td></tr>
+    <tr><td>-</td><td>subtract</td><td>5 - 3</td><td class="desc">2</td></tr>
+    <tr><td>*</td><td>multiply</td><td>5 * 3</td><td class="desc">15</td></tr>
+    <tr><td>/</td><td>divide (always float)</td><td>7 / 2</td><td class="desc">3.5 — not 3!</td></tr>
+    <tr><td>//</td><td>floor divide</td><td>7 // 2</td><td class="desc">3</td></tr>
+    <tr><td>%</td><td>modulo</td><td>7 % 2</td><td class="desc">1</td></tr>
+    <tr><td>**</td><td>power (not ^ like C)</td><td>2 ** 8</td><td class="desc">256</td></tr>
+  </table>
+
+  <div class="callout warning">
+    <strong>Division is different from C</strong>
+    In C, <code>7/2 = 3</code> for integers. In Python 3, <code>7/2 = 3.5</code> always. Use <code>//</code> to get integer division.
+  </div>
+
+  <div class="subsection">
+    <h3>Augmented assignment &amp; chained comparison</h3>
+    <pre><code>x = <span class="nu">10</span>
+x += <span class="nu">5</span>      <span class="cm"># 15  (same as C)</span>
+x -= <span class="nu">3</span>      <span class="cm"># 12</span>
+x *= <span class="nu">2</span>      <span class="cm"># 24</span>
+x //= <span class="nu">3</span>     <span class="cm"># 8</span>
+x **= <span class="nu">2</span>     <span class="cm"># 64</span>
+
+<span class="cm"># Chained comparison — unique to Python, very readable</span>
+<span class="kw">if</span> <span class="nu">0</span> < x < <span class="nu">100</span>:
+    <span class="fn">print</span>(<span class="st">"in range"</span>)
+
+<span class="cm"># Logical operators use words, not symbols</span>
+<span class="kw">if</span> x > <span class="nu">5</span> <span class="kw">and</span> x < <span class="nu">100</span>:   <span class="cm"># not &&</span>
+    <span class="fn">print</span>(<span class="st">"yes"</span>)
+<span class="kw">if</span> x == <span class="nu">0</span> <span class="kw">or</span> x == <span class="nu">1</span>:    <span class="cm"># not ||</span>
+    <span class="fn">print</span>(<span class="st">"bit"</span>)
+<span class="kw">if</span> <span class="kw">not</span> done:              <span class="cm"># not !</span>
+    <span class="fn">print</span>(<span class="st">"still going"</span>)
+<div class="lang-label">python</div></code></pre>
+  </div>
+
+  <div class="subsection">
+    <h3>math module</h3>
+    <pre><code><span class="kw">import</span> math
+
+math.<span class="fn">sqrt</span>(<span class="nu">144</span>)       <span class="cm"># 12.0</span>
+math.<span class="fn">floor</span>(<span class="nu">3.9</span>)      <span class="cm"># 3</span>
+math.<span class="fn">ceil</span>(<span class="nu">3.1</span>)       <span class="cm"># 4</span>
+<span class="fn">round</span>(<span class="nu">3.567</span>, <span class="nu">2</span>)      <span class="cm"># 3.57</span>
+math.<span class="fn">log</span>(<span class="nu">100</span>, <span class="nu">10</span>)    <span class="cm"># 2.0 (log base 10)</span>
+math.<span class="fn">log</span>(math.e)     <span class="cm"># 1.0 (natural log)</span>
+math.<span class="fn">sin</span>(math.pi)    <span class="cm"># ~0 (uses radians)</span>
+math.<span class="fn">degrees</span>(<span class="nu">1.57</span>)  <span class="cm"># 89.95... (rad → deg)</span>
+math.pi              <span class="cm"># 3.14159265358979</span>
+math.e               <span class="cm"># 2.71828...</span>
+math.<span class="fn">inf</span>             <span class="cm"># infinity</span>
+<div class="lang-label">python</div></code></pre>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     05 — INPUT / OUTPUT
+════════════════════════════════════════════ -->
+<div class="section" id="io">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <h2>Input / output</h2>
+  </div>
+
+  <div class="subsection">
+    <h3>print() — output</h3>
+    <pre><code><span class="fn">print</span>(<span class="st">"hello"</span>)                 <span class="cm"># hello\n</span>
+<span class="fn">print</span>(<span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>)          <span class="cm"># a b c (space-separated)</span>
+<span class="fn">print</span>(<span class="st">"a"</span>, <span class="st">"b"</span>, sep=<span class="st">","</span>)      <span class="cm"># a,b</span>
+<span class="fn">print</span>(<span class="st">"x"</span>, end=<span class="st">""</span>)             <span class="cm"># no newline at end</span>
+
+v = <span class="nu">3.14159</span>
+<span class="fn">print</span>(<span class="st">f"pi ≈ </span>{v:.4f}<span class="st">"</span>)          <span class="cm"># pi ≈ 3.1416</span>
+<span class="fn">print</span>(<span class="st">f"</span>{<span class="nu">1_000_000</span>:,}<span class="st">"</span>)         <span class="cm"># 1,000,000</span>
+<span class="fn">print</span>(<span class="st">f"</span>{<span class="nu">255</span>:#010b}<span class="st">"</span>)           <span class="cm"># 0b11111111</span>
+<div class="lang-label">python</div></code></pre>
+  </div>
+
+  <div class="subsection">
+    <h3>input() — user input</h3>
+    <p><code>input()</code> always returns a string. Cast to <code>int</code> or <code>float</code> before doing math.</p>
+    <pre><code>name = <span class="fn">input</span>(<span class="st">"Your name: "</span>)
+<span class="fn">print</span>(<span class="st">f"Hi, </span>{name}<span class="st">!"</span>)
+
+<span class="cm"># Always wrap in try/except when casting user input</span>
+<span class="kw">try</span>:
+    age = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"Your age: "</span>))
+    <span class="fn">print</span>(<span class="st">f"In 10 years you'll be </span>{age + <span class="nu">10</span>}<span class="st">"</span>)
+<span class="kw">except</span> ValueError:
+    <span class="fn">print</span>(<span class="st">"That's not a number!"</span>)
+<div class="lang-label">python</div></code></pre>
+  </div>
+
+  <div class="subsection">
+    <h3>File reading &amp; writing</h3>
+    <p>The <code>with</code> block closes the file automatically — no <code>fclose()</code> needed.</p>
+    <pre><code><span class="cm"># Reading</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"data.txt"</span>, <span class="st">"r"</span>) <span class="kw">as</span> f:
+    content = f.<span class="fn">read</span>()          <span class="cm"># entire file as string</span>
+    lines   = f.<span class="fn">readlines</span>()    <span class="cm"># list of lines</span>
+
+<span class="cm"># Read line by line (memory efficient for big files)</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"data.txt"</span>) <span class="kw">as</span> f:
+    <span class="kw">for</span> line <span class="kw">in</span> f:
+        <span class="fn">print</span>(line.<span class="fn">strip</span>())
+
+<span class="cm"># Writing</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"out.txt"</span>, <span class="st">"w"</span>) <span class="kw">as</span> f:  <span class="cm"># "w" overwrites</span>
+    f.<span class="fn">write</span>(<span class="st">"Line one\n"</span>)
+
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"out.txt"</span>, <span class="st">"a"</span>) <span class="kw">as</span> f:  <span class="cm"># "a" appends</span>
+    f.<span class="fn">write</span>(<span class="st">"New line\n"</span>)
+
+<span class="cm"># JSON read/write</span>
+<span class="kw">import</span> json
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"config.json"</span>) <span class="kw">as</span> f:
+    cfg = json.<span class="fn">load</span>(f)          <span class="cm"># dict</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"out.json"</span>, <span class="st">"w"</span>) <span class="kw">as</span> f:
+    json.<span class="fn">dump</span>(cfg, f, indent=<span class="nu">2</span>)
+<div class="lang-label">python</div></code></pre>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     06 — DATA STRUCTURES
+════════════════════════════════════════════ -->
+<div class="section" id="ds">
+  <div class="section-header">
+    <span class="section-num">06</span>
+    <h2>Data structures</h2>
+  </div>
+
+  <div class="callout tip">
+    <strong>C comparison</strong>
+    Python has 4 built-in collections. No malloc, no free — they grow and shrink automatically.
+  </div>
+
+  <div class="subsection">
+    <h3>List — dynamic array</h3>
+    <pre><code>nums  = [<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>, <span class="nu">4</span>, <span class="nu">5</span>]
+mixed = [<span class="nu">1</span>, <span class="st">"hi"</span>, <span class="nu">3.14</span>, <span class="kw">True</span>]     <span class="cm"># mixed types OK</span>
+
+nums.<span class="fn">append</span>(<span class="nu">6</span>)          <span class="cm"># add to end</span>
+nums.<span class="fn">insert</span>(<span class="nu">0</span>, <span class="nu">99</span>)      <span class="cm"># insert at index 0</span>
+nums.<span class="fn">pop</span>()              <span class="cm"># remove and return last</span>
+nums.<span class="fn">pop</span>(<span class="nu">0</span>)             <span class="cm"># remove index 0</span>
+nums.<span class="fn">remove</span>(<span class="nu">3</span>)          <span class="cm"># remove first occurrence of value 3</span>
+nums.<span class="fn">sort</span>()             <span class="cm"># sort in place</span>
+nums.<span class="fn">reverse</span>()          <span class="cm"># reverse in place</span>
+<span class="fn">sorted</span>(nums)            <span class="cm"># returns new sorted list</span>
+<span class="fn">len</span>(nums)               <span class="cm"># length</span>
+<span class="nu">3</span> <span class="kw">in</span> nums               <span class="cm"># membership check — True/False</span>
+<div class="lang-label">python</div></code></pre>
+  </div>
+
+  <div class="subsection">
+    <h3>Tuple — immutable list</h3>
+    <pre><code>point = (<span class="nu">10</span>, <span class="nu">20</span>)
+rgb   = (<span class="nu">255</span>, <span class="nu">128</span>, <span class="nu">0</span>)
+
+x, y = point              <span class="cm"># unpack</span>
+<span class="fn">print</span>(point[<span class="nu">0</span>])          <span class="cm"># 10</span>
+<span class="cm"># point[0] = 5  ← TypeError — immutable!</span>
+
+<span class="cm"># Use tuples for fixed data: coordinates, RGB, return pairs</span>
+<span class="kw">def</span> <span class="fn">min_max</span>(lst):
+    <span class="kw">return</span> <span class="fn">min</span>(lst), <span class="fn">max</span>(lst)   <span class="cm"># returns a tuple</span>
+
+lo, hi = <span class="fn">min_max</span>([<span class="nu">3</span>,<span class="nu">1</span>,<span class="nu">4</span>,<span class="nu">1</span>,<span class="nu">5</span>])  <span class="cm"># unpack on the other end</span>
+<div class="lang-label">python</div></code></pre>
+  </div>
+
+  <div class="subsection">
+    <h3>Dictionary — hash map</h3>
+    <pre><code>person = {
+    <span class="st">"name"</span>: <span class="st">"Alex"</span>,
+    <span class="st">"age"</span> : <span class="nu">30</span>,
+    <span class="st">"city"</span>: <span class="st">"Kanata"</span>
+}
+
+<span class="fn">print</span>(person[<span class="st">"name"</span>])          <span class="cm"># Alex</span>
+person[<span class="st">"age"</span>] = <span class="nu">31</span>             <span class="cm"># update value</span>
+person[<span class="st">"job"</span>] = <span class="st">"Engineer"</span>    <span class="cm"># add new key</span>
+<span class="kw">del</span> person[<span class="st">"city"</span>]             <span class="cm"># remove key</span>
+<span class="st">"name"</span> <span class="kw">in</span> person               <span class="cm"># True</span>
+
+<span class="cm"># Safe get — returns None instead of crashing</span>
+person.<span class="fn">get</span>(<span class="st">"salary"</span>)           <span class="cm"># None (no KeyError)</span>
+person.<span class="fn">get</span>(<span class="st">"salary"</span>, <span class="nu">0</span>)       <span class="cm"># 0 (default value)</span>
+
+<span class="cm"># Iterate</span>
+<span class="kw">for</span> key, val <span class="kw">in</span> person.<span class="fn">items</span>():
+    <span class="fn">print</span>(<span class="st">f"</span>{key}<span class="st">: </span>{val}<span class="st">"</span>)
+<div class="lang-label">python</div></code></pre>
+  </div>
+
+  <div class="subsection">
+    <h3>Set — unique values</h3>
+    <pre><code>a = {<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>, <span class="nu">4</span>}
+b = {<span class="nu">3</span>, <span class="nu">4</span>, <span class="nu">5</span>, <span class="nu">6</span>}
+
+a | b    <span class="cm"># union        {1,2,3,4,5,6}</span>
+a & b    <span class="cm"># intersection {3,4}</span>
+a - b    <span class="cm"># difference   {1,2}</span>
+a ^ b    <span class="cm"># symmetric diff {1,2,5,6}</span>
+
+<span class="cm"># Most common use: remove duplicates from a list</span>
+nums = [<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">2</span>, <span class="nu">3</span>, <span class="nu">3</span>, <span class="nu">3</span>]
+unique = <span class="fn">list</span>(<span class="fn">set</span>(nums))   <span class="cm"># [1, 2, 3]</span>
+<div class="lang-label">python</div></code></pre>
+  </div>
+
+  <div class="subsection">
+    <h3>List comprehension — Python's superpower</h3>
+    <p>Build lists in one readable line. Much more Pythonic than a for loop with append.</p>
+    <pre><code><span class="cm"># Format: [expression for item in iterable if condition]</span>
+
+squares = [x**<span class="nu">2</span> <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">10</span>)]
+<span class="cm"># [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]</span>
+
+evens = [x <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">20</span>) <span class="kw">if</span> x % <span class="nu">2</span> == <span class="nu">0</span>]
+<span class="cm"># [0, 2, 4, 6, 8, 10, 12, 14, 16, 18]</span>
+
+words  = [<span class="st">"hello"</span>, <span class="st">"world"</span>]
+upper  = [w.<span class="fn">upper</span>() <span class="kw">for</span> w <span class="kw">in</span> words]
+<span class="cm"># ['HELLO', 'WORLD']</span>
+
+<span class="cm"># Dict comprehension</span>
+sq_map = {x: x**<span class="nu">2</span> <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">6</span>)}
+<span class="cm"># {0:0, 1:1, 2:4, 3:9, 4:16, 5:25}</span>
+<div class="lang-label">python</div></code></pre>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     07 — LOOPS
+════════════════════════════════════════════ -->
+<div class="section" id="loops">
+  <div class="section-header">
+    <span class="section-num">07</span>
+    <h2>Loops</h2>
+  </div>
+
+  <div class="subsection">
+    <h3>for loop — iterate over anything</h3>
+    <pre><code><span class="cm"># range() — equivalent to C's for(i=0; i&lt;5; i++)</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">5</span>):
+    <span class="fn">print</span>(i)              <span class="cm"># 0 1 2 3 4</span>
+
+<span class="cm"># range(start, stop, step)</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">0</span>, <span class="nu">10</span>, <span class="nu">2</span>):
+    <span class="fn">print</span>(i)              <span class="cm"># 0 2 4 6 8</span>
+
+<span class="cm"># Iterate over a list directly — no index arithmetic</span>
+names = [<span class="st">"Alice"</span>, <span class="st">"Bob"</span>, <span class="st">"Carol"</span>]
+<span class="kw">for</span> name <span class="kw">in</span> names:
+    <span class="fn">print</span>(name)
+
+<span class="cm"># enumerate() — get index AND value</span>
+<span class="kw">for</span> i, name <span class="kw">in</span> <span class="fn">enumerate</span>(names):
+    <span class="fn">print</span>(<span class="st">f"</span>{i}<span class="st">: </span>{name}<span class="st">"</span>)    <span class="cm"># 0: Alice, 1: Bob ...</span>
+
+<span class="cm"># zip() — iterate two lists in parallel</span>
+freqs = [<span class="nu">100</span>, <span class="nu">200</span>, <span class="nu">400</span>]
+amps  = [<span class="nu">1.0</span>, <span class="nu">0.5</span>, <span class="nu">0.25</span>]
+<span class="kw">for</span> f, a <span class="kw">in</span> <span class="fn">zip</span>(freqs, amps):
+    <span class="fn">print</span>(<span class="st">f"</span>{f}<span class="st">MHz → </span>{a}<span class="st">V"</span>)
+<div class="lang-label">python</div></code></pre>
+  </div>
+
+  <div class="subsection">
+    <h3>while loop</h3>
+    <pre><code>n = <span class="nu">1</span>
+<span class="kw">while</span> n < <span class="nu">100</span>:
+    n *= <span class="nu">2</span>
+<span class="fn">print</span>(n)                  <span class="cm"># 128</span>
+
+<span class="cm"># break and continue work the same as in C</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">10</span>):
+    <span class="kw">if</span> i == <span class="nu">3</span>: <span class="kw">continue</span>    <span class="cm"># skip 3</span>
+    <span class="kw">if</span> i == <span class="nu">7</span>: <span class="kw">break</span>       <span class="cm"># stop at 7</span>
+    <span class="fn">print</span>(i)
+<div class="lang-label">python</div></code></pre>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     08 — CONDITIONALS
+════════════════════════════════════════════ -->
+<div class="section" id="conditionals">
+  <div class="section-header">
+    <span class="section-num">08</span>
+    <h2>Conditionals</h2>
+  </div>
+
+  <div class="subsection">
+    <h3>if / elif / else</h3>
+    <p><code>elif</code> instead of <code>else if</code>. No parentheses required around the condition.</p>
+    <pre><code>score = <span class="nu">85</span>
+
+<span class="kw">if</span> score >= <span class="nu">90</span>:
+    grade = <span class="st">"A"</span>
+<span class="kw">elif</span> score >= <span class="nu">80</span>:
+    grade = <span class="st">"B"</span>
+<span class="kw">elif</span> score >= <span class="nu">70</span>:
+    grade = <span class="st">"C"</span>
+<span class="kw">else</span>:
+    grade = <span class="st">"F"</span>
+
+<span class="fn">print</span>(grade)       <span class="cm"># B</span>
+
+<span class="cm"># Ternary — one line if/else</span>
+label = <span class="st">"pass"</span> <span class="kw">if</span> score >= <span class="nu">60</span> <span class="kw">else</span> <span class="st">"fail"</span>
+<div class="lang-label">python</div></code></pre>
+  </div>
+
+  <div class="subsection">
+    <h3>match / case (Python 3.10+)</h3>
+    <p>Like a switch statement but far more powerful — it can match patterns, types, and structures.</p>
+    <pre><code>command = <span class="st">"quit"</span>
+
+<span class="kw">match</span> command:
+    <span class="kw">case</span> <span class="st">"quit"</span>:
+        <span class="fn">print</span>(<span class="st">"Quitting"</span>)
+    <span class="kw">case</span> <span class="st">"help"</span>:
+        <span class="fn">print</span>(<span class="st">"Showing help"</span>)
+    <span class="kw">case</span> _:             <span class="cm"># default (like C's default:)</span>
+        <span class="fn">print</span>(<span class="st">"Unknown"</span>)
+<div class="lang-label">python</div></code></pre>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     09 — FUNCTIONS
+════════════════════════════════════════════ -->
+<div class="section" id="functions">
+  <div class="section-header">
+    <span class="section-num">09</span>
+    <h2>Functions</h2>
+  </div>
+
+  <div class="subsection">
+    <h3>Defining functions</h3>
+    <p><code>def</code> instead of a return type. No type declarations needed (but hints are recommended).</p>
+    <pre><code><span class="kw">def</span> <span class="fn">add</span>(a, b):
+    <span class="kw">return</span> a + b
+
+<span class="fn">print</span>(<span class="fn">add</span>(<span class="nu">3</span>, <span class="nu">4</span>))          <span class="cm"># 7</span>
+<span class="fn">print</span>(<span class="fn">add</span>(<span class="st">"hello"</span>, <span class="st">"!"</span>))  <span class="cm"># hello! (works on strings too)</span>
+
+<span class="cm"># Default arguments</span>
+<span class="kw">def</span> <span class="fn">greet</span>(name, greeting=<span class="st">"Hello"</span>):
+    <span class="kw">return</span> <span class="st">f"</span>{greeting}<span class="st">, </span>{name}<span class="st">!"</span>
+
+<span class="fn">greet</span>(<span class="st">"Alex"</span>)              <span class="cm"># "Hello, Alex!"</span>
+<span class="fn">greet</span>(<span class="st">"Alex"</span>, <span class="st">"Hey"</span>)      <span class="cm"># "Hey, Alex!"</span>
+<div class="lang-label">python</div></code></pre>
+  </div>
+
+  <div class="subsection">
+    <h3>Multiple return values &amp; *args</h3>
+    <pre><code><span class="cm"># Return multiple values — no struct needed</span>
+<span class="kw">def</span> <span class="fn">stats</span>(nums):
+    <span class="kw">return</span> <span class="fn">min</span>(nums), <span class="fn">max</span>(nums), <span class="fn">sum</span>(nums)/<span class="fn">len</span>(nums)
+
+lo, hi, avg = <span class="fn">stats</span>([<span class="nu">3</span>,<span class="nu">1</span>,<span class="nu">4</span>,<span class="nu">1</span>,<span class="nu">5</span>,<span class="nu">9</span>])
+
+<span class="cm"># *args — accept any number of positional arguments</span>
+<span class="kw">def</span> <span class="fn">total</span>(*nums):
+    <span class="kw">return</span> <span class="fn">sum</span>(nums)
+
+<span class="fn">total</span>(<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>)           <span class="cm"># 6</span>
+<span class="fn">total</span>(<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>, <span class="nu">4</span>, <span class="nu">5</span>)     <span class="cm"># 15</span>
+
+<span class="cm"># **kwargs — accept any keyword arguments</span>
+<span class="kw">def</span> <span class="fn">describe</span>(**info):
+    <span class="kw">for</span> k, v <span class="kw">in</span> info.<span class="fn">items</span>():
+        <span class="fn">print</span>(<span class="st">f"</span>{k}<span class="st">: </span>{v}<span class="st">"</span>)
+
+<span class="fn">describe</span>(name=<span class="st">"Alex"</span>, freq=<span class="nu">5e9</span>)
+<div class="lang-label">python</div></code></pre>
+  </div>
+
+  <div class="subsection">
+    <h3>Lambda — anonymous function</h3>
+    <p>One-liner functions, most useful as arguments to sort/filter/map.</p>
+    <pre><code>square = <span class="kw">lambda</span> x: x**<span class="nu">2</span>
+<span class="fn">print</span>(<span class="fn">square</span>(<span class="nu">5</span>))             <span class="cm"># 25</span>
+
+<span class="cm"># Sorting with a key function</span>
+points = [(<span class="nu">3</span>,<span class="nu">1</span>), (<span class="nu">1</span>,<span class="nu">4</span>), (<span class="nu">2</span>,<span class="nu">2</span>)]
+points.<span class="fn">sort</span>(key=<span class="kw">lambda</span> p: p[<span class="nu">1</span>])  <span class="cm"># sort by y-value</span>
+<span class="cm"># [(3,1), (2,2), (1,4)]</span>
+
+words = [<span class="st">"banana"</span>, <span class="st">"apple"</span>, <span class="st">"kiwi"</span>]
+words.<span class="fn">sort</span>(key=<span class="kw">lambda</span> s: <span class="fn">len</span>(s))  <span class="cm"># sort by length</span>
+<div class="lang-label">python</div></code></pre>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     10 — ERROR HANDLING
+════════════════════════════════════════════ -->
+<div class="section" id="errors">
+  <div class="section-header">
+    <span class="section-num">10</span>
+    <h2>Error handling</h2>
+  </div>
+
+  <div class="subsection">
+    <h3>try / except / else / finally</h3>
+    <pre><code><span class="kw">def</span> <span class="fn">safe_divide</span>(a, b):
+    <span class="kw">try</span>:
+        result = a / b
+    <span class="kw">except</span> ZeroDivisionError:
+        <span class="fn">print</span>(<span class="st">"Can't divide by zero"</span>)
+        <span class="kw">return</span> <span class="kw">None</span>
+    <span class="kw">except</span> TypeError <span class="kw">as</span> e:
+        <span class="fn">print</span>(<span class="st">f"Wrong type: </span>{e}<span class="st">"</span>)
+        <span class="kw">return</span> <span class="kw">None</span>
+    <span class="kw">else</span>:
+        <span class="kw">return</span> result    <span class="cm"># runs only if no exception</span>
+    <span class="kw">finally</span>:
+        <span class="fn">print</span>(<span class="st">"done"</span>)   <span class="cm"># always runs</span>
+
+<span class="cm"># Common exceptions to know</span>
+<span class="cm"># ValueError     — bad value (int("abc"))</span>
+<span class="cm"># TypeError      — wrong type (1 + "a")</span>
+<span class="cm"># KeyError       — missing dict key</span>
+<span class="cm"># IndexError     — list index out of range</span>
+<span class="cm"># FileNotFoundError — file doesn't exist</span>
+<div class="lang-label">python</div></code></pre>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     11 — STANDARD LIBRARY
+════════════════════════════════════════════ -->
+<div class="section" id="stdlib">
+  <div class="section-header">
+    <span class="section-num">11</span>
+    <h2>Standard library highlights</h2>
+  </div>
+
+  <p>No install needed — these come with every Python installation.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h4>os &amp; pathlib — filesystem</h4>
+      <pre><code><span class="kw">import</span> os
+<span class="kw">from</span> pathlib <span class="kw">import</span> Path
+
+<span class="fn">print</span>(os.<span class="fn">getcwd</span>())
+p = Path(<span class="st">"data/results.csv"</span>)
+<span class="fn">print</span>(p.<span class="fn">exists</span>())
+<span class="fn">print</span>(p.suffix)          <span class="cm"># .csv</span>
+<span class="fn">print</span>(p.stem)            <span class="cm"># results</span>
+p.parent.<span class="fn">mkdir</span>(exist_ok=<span class="kw">True</span>)
+<div class="lang-label">python</div></code></pre>
+    </div>
+    <div class="card">
+      <h4>random — random numbers</h4>
+      <pre><code><span class="kw">import</span> random
+
+random.<span class="fn">random</span>()         <span class="cm"># 0.0–1.0</span>
+random.<span class="fn">randint</span>(<span class="nu">1</span>, <span class="nu">100</span>) <span class="cm"># int 1–100</span>
+random.<span class="fn">choice</span>([<span class="st">"a"</span>,<span class="st">"b"</span>,<span class="st">"c"</span>])
+random.<span class="fn">shuffle</span>(my_list) <span class="cm"># in place</span>
+random.<span class="fn">seed</span>(<span class="nu">42</span>)         <span class="cm"># reproducible</span>
+<div class="lang-label">python</div></code></pre>
+    </div>
+    <div class="card">
+      <h4>datetime — dates &amp; times</h4>
+      <pre><code><span class="kw">from</span> datetime <span class="kw">import</span> datetime, timedelta
+
+now = datetime.<span class="fn">now</span>()
+<span class="fn">print</span>(now.<span class="fn">strftime</span>(<span class="st">"%Y-%m-%d"</span>))
+tomorrow = now + timedelta(days=<span class="nu">1</span>)
+<div class="lang-label">python</div></code></pre>
+    </div>
+    <div class="card">
+      <h4>collections — useful containers</h4>
+      <pre><code><span class="kw">from</span> collections <span class="kw">import</span> Counter, defaultdict
+
+words = [<span class="st">"a"</span>,<span class="st">"b"</span>,<span class="st">"a"</span>,<span class="st">"c"</span>,<span class="st">"a"</span>]
+c = <span class="fn">Counter</span>(words)
+c.<span class="fn">most_common</span>(<span class="nu">2</span>)   <span class="cm"># [('a',3),('b',1)]</span>
+
+d = <span class="fn">defaultdict</span>(<span class="fn">list</span>)
+d[<span class="st">"key"</span>].<span class="fn">append</span>(<span class="nu">1</span>)  <span class="cm"># no KeyError</span>
+<div class="lang-label">python</div></code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     12 — NUMPY
+════════════════════════════════════════════ -->
+<div class="section" id="numpy">
+  <div class="section-header">
+    <span class="section-num">12</span>
+    <h2>NumPy — numeric arrays</h2>
+  </div>
+
+  <div class="lib-card">
+    <div class="lib-header">
+      <span class="lib-badge">numpy</span>
+      <h3>C-speed array math. Foundation of scientific Python.</h3>
+    </div>
+    <p class="lib-desc">NumPy's arrays behave like C arrays under the hood — contiguous memory, typed, fast. Your C instincts transfer directly. The key insight: operations work on the whole array at once (vectorized), no loop needed.</p>
+    <span class="install">pip install numpy</span>
+    <pre><code><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="cm"># Create arrays</span>
+a = np.<span class="fn">array</span>([<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>, <span class="nu">4</span>, <span class="nu">5</span>])
+b = np.<span class="fn">zeros</span>(<span class="nu">5</span>)                    <span class="cm"># [0. 0. 0. 0. 0.]</span>
+c = np.<span class="fn">ones</span>((<span class="nu">3</span>, <span class="nu">3</span>))               <span class="cm"># 3x3 matrix of 1s</span>
+d = np.<span class="fn">linspace</span>(<span class="nu">0</span>, <span class="nu">10</span>, <span class="nu">100</span>)      <span class="cm"># 100 evenly spaced points</span>
+e = np.<span class="fn">arange</span>(<span class="nu">0</span>, <span class="nu">10</span>, <span class="nu">0.5</span>)       <span class="cm"># like range() but with floats</span>
+eye = np.<span class="fn">eye</span>(<span class="nu">3</span>)                    <span class="cm"># 3x3 identity matrix</span>
+
+<span class="cm"># Vectorized math — no loops!</span>
+<span class="fn">print</span>(a * <span class="nu">2</span>)                       <span class="cm"># [2 4 6 8 10]</span>
+<span class="fn">print</span>(a ** <span class="nu">2</span>)                      <span class="cm"># [1 4 9 16 25]</span>
+<span class="fn">print</span>(a + a)                       <span class="cm"># [2 4 6 8 10]</span>
+<span class="fn">print</span>(np.<span class="fn">sin</span>(a))                   <span class="cm"># sin of each element</span>
+
+<span class="cm"># Statistics</span>
+np.<span class="fn">mean</span>(a)      <span class="cm"># 3.0</span>
+np.<span class="fn">std</span>(a)       <span class="cm"># standard deviation</span>
+np.<span class="fn">min</span>(a)       <span class="cm"># 1</span>
+np.<span class="fn">argmax</span>(a)    <span class="cm"># index of max value</span>
+
+<span class="cm"># Signal processing example</span>
+t = np.<span class="fn">linspace</span>(<span class="nu">0</span>, <span class="nu">1</span>, <span class="nu">1000</span>)
+signal = np.<span class="fn">sin</span>(<span class="nu">2</span> * np.pi * <span class="nu">50</span> * t)  <span class="cm"># 50 Hz sine wave</span>
+fft = np.fft.<span class="fn">fft</span>(signal)               <span class="cm"># frequency analysis</span>
+<div class="lang-label">python</div></code></pre>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     13 — PANDAS
+════════════════════════════════════════════ -->
+<div class="section" id="pandas">
+  <div class="section-header">
+    <span class="section-num">13</span>
+    <h2>Pandas — data tables</h2>
+  </div>
+
+  <div class="lib-card">
+    <div class="lib-header">
+      <span class="lib-badge">pandas</span>
+      <h3>Your new spreadsheet — in code.</h3>
+    </div>
+    <p class="lib-desc">Pandas gives you a DataFrame — a table with named columns. Load CSV/Excel/SQL data, filter rows, group, aggregate, and export. Essential for any data work.</p>
+    <span class="install">pip install pandas</span>
+    <pre><code><span class="kw">import</span> pandas <span class="kw">as</span> pd
+
+<span class="cm"># Create a table</span>
+df = pd.<span class="fn">DataFrame</span>({
+    <span class="st">"freq_MHz"</span> : [<span class="nu">100</span>, <span class="nu">200</span>, <span class="nu">400</span>, <span class="nu">800</span>, <span class="nu">1600</span>],
+    <span class="st">"loss_dB"</span>  : [<span class="nu">0.5</span>, <span class="nu">1.1</span>, <span class="nu">2.3</span>, <span class="nu">4.8</span>, <span class="nu">9.5</span>],
+    <span class="st">"material"</span> : [<span class="st">"FR4"</span>] * <span class="nu">5</span>
+})
+
+<span class="fn">print</span>(df.<span class="fn">head</span>())              <span class="cm"># first 5 rows</span>
+<span class="fn">print</span>(df.<span class="fn">describe</span>())         <span class="cm"># stats: mean, std, min, max</span>
+<span class="fn">print</span>(df.dtypes)              <span class="cm"># column types</span>
+<span class="fn">print</span>(df.<span class="fn">shape</span>)              <span class="cm"># (5, 3)</span>
+
+<span class="cm"># Access columns and filter rows</span>
+df[<span class="st">"loss_dB"</span>]                <span class="cm"># one column (Series)</span>
+df[[<span class="st">"freq_MHz"</span>, <span class="st">"loss_dB"</span>]] <span class="cm"># two columns (DataFrame)</span>
+df[df[<span class="st">"loss_dB"</span>] > <span class="nu">2</span>]       <span class="cm"># rows where loss > 2 dB</span>
+df.<span class="fn">iloc</span>[<span class="nu">0</span>]                   <span class="cm"># first row by position</span>
+df.<span class="fn">loc</span>[df[<span class="st">"freq_MHz"</span>]==<span class="nu">400</span>]  <span class="cm"># row where freq = 400</span>
+
+<span class="cm"># Add computed columns</span>
+df[<span class="st">"loss_linear"</span>] = <span class="nu">10</span> ** (df[<span class="st">"loss_dB"</span>] / -<span class="nu">10</span>)
+
+<span class="cm"># Sort, group, aggregate</span>
+df.<span class="fn">sort_values</span>(<span class="st">"loss_dB"</span>, ascending=<span class="kw">False</span>)
+df.<span class="fn">groupby</span>(<span class="st">"material"</span>)[<span class="st">"loss_dB"</span>].<span class="fn">mean</span>()
+
+<span class="cm"># Load/save</span>
+df = pd.<span class="fn">read_csv</span>(<span class="st">"data.csv"</span>)
+df = pd.<span class="fn">read_excel</span>(<span class="st">"data.xlsx"</span>)
+df.<span class="fn">to_csv</span>(<span class="st">"out.csv"</span>, index=<span class="kw">False</span>)
+<div class="lang-label">python</div></code></pre>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     14 — PLOTTING
+════════════════════════════════════════════ -->
+<div class="section" id="plotting">
+  <div class="section-header">
+    <span class="section-num">14</span>
+    <h2>Plotting &amp; visualization</h2>
+  </div>
+
+  <div class="lib-card">
+    <div class="lib-header">
+      <span class="lib-badge">matplotlib</span>
+      <h3>Standard Python plotting — like MATLAB's plot().</h3>
+    </div>
+    <span class="install">pip install matplotlib</span>
+    <pre><code><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+
+t = np.<span class="fn">linspace</span>(<span class="nu">0</span>, <span class="nu">4</span>*np.pi, <span class="nu">300</span>)
+y1 = np.<span class="fn">sin</span>(t)
+y2 = np.<span class="fn">cos</span>(t) * np.<span class="fn">exp</span>(-t/<span class="nu">5</span>)
+
+plt.<span class="fn">figure</span>(figsize=(<span class="nu">10</span>, <span class="nu">4</span>))
+plt.<span class="fn">plot</span>(t, y1, label=<span class="st">"sin(t)"</span>)
+plt.<span class="fn">plot</span>(t, y2, label=<span class="st">"damped cos"</span>, linestyle=<span class="st">"--"</span>)
+plt.<span class="fn">xlabel</span>(<span class="st">"Time (s)"</span>)
+plt.<span class="fn">ylabel</span>(<span class="st">"Amplitude"</span>)
+plt.<span class="fn">title</span>(<span class="st">"Signal plot"</span>)
+plt.<span class="fn">legend</span>()
+plt.<span class="fn">grid</span>(<span class="kw">True</span>)
+plt.<span class="fn">tight_layout</span>()
+plt.<span class="fn">savefig</span>(<span class="st">"plot.png"</span>, dpi=<span class="nu">150</span>)   <span class="cm"># save to file</span>
+plt.<span class="fn">show</span>()                           <span class="cm"># display</span>
+<div class="lang-label">python</div></code></pre>
+  </div>
+
+  <div class="lib-card">
+    <div class="lib-header">
+      <span class="lib-badge">plotly</span>
+      <h3>Interactive charts — zoom, hover, export.</h3>
+    </div>
+    <span class="install">pip install plotly</span>
+    <pre><code><span class="kw">import</span> plotly.express <span class="kw">as</span> px
+<span class="kw">import</span> pandas <span class="kw">as</span> pd
+
+df = pd.<span class="fn">DataFrame</span>({
+    <span class="st">"freq"</span> : [<span class="nu">100</span>, <span class="nu">200</span>, <span class="nu">400</span>, <span class="nu">800</span>, <span class="nu">1600</span>, <span class="nu">3200</span>],
+    <span class="st">"s21"</span>  : [-<span class="nu">0.5</span>, -<span class="nu">1.1</span>, -<span class="nu">2.3</span>, -<span class="nu">4.8</span>, -<span class="nu">9.5</span>, -<span class="nu">18.2</span>]
+})
+
+fig = px.<span class="fn">line</span>(df, x=<span class="st">"freq"</span>, y=<span class="st">"s21"</span>,
+             title=<span class="st">"S21 vs Frequency"</span>,
+             log_x=<span class="kw">True</span>,
+             markers=<span class="kw">True</span>)
+fig.<span class="fn">update_layout</span>(
+    xaxis_title=<span class="st">"Frequency (MHz)"</span>,
+    yaxis_title=<span class="st">"S21 (dB)"</span>
+)
+fig.<span class="fn">show</span>()       <span class="cm"># opens in browser, fully interactive</span>
+fig.<span class="fn">write_html</span>(<span class="st">"chart.html"</span>)  <span class="cm"># save as standalone file</span>
+<div class="lang-label">python</div></code></pre>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     15 — WEB SCRAPING
+════════════════════════════════════════════ -->
+<div class="section" id="scraping">
+  <div class="section-header">
+    <span class="section-num">15</span>
+    <h2>Web scraping</h2>
+  </div>
+
+  <div class="lib-card">
+    <div class="lib-header">
+      <span class="lib-badge">requests</span>
+      <span class="lib-badge">beautifulsoup4</span>
+      <h3>Fetch web pages and extract data.</h3>
+    </div>
+    <span class="install">pip install requests beautifulsoup4</span>
+    <pre><code><span class="kw">import</span> requests
+<span class="kw">from</span> bs4 <span class="kw">import</span> BeautifulSoup
+<span class="kw">import</span> pandas <span class="kw">as</span> pd
+
+<span class="cm"># Fetch a page</span>
+r = requests.<span class="fn">get</span>(<span class="st">"https://example.com"</span>)
+<span class="fn">print</span>(r.status_code)         <span class="cm"># 200 = OK</span>
+<span class="fn">print</span>(r.text[:500])          <span class="cm"># raw HTML</span>
+
+<span class="cm"># Parse HTML</span>
+soup = <span class="fn">BeautifulSoup</span>(r.text, <span class="st">"html.parser"</span>)
+
+title  = soup.<span class="fn">find</span>(<span class="st">"h1"</span>).text
+links  = [a[<span class="st">"href"</span>] <span class="kw">for</span> a <span class="kw">in</span> soup.<span class="fn">find_all</span>(<span class="st">"a"</span>) <span class="kw">if</span> a.<span class="fn">get</span>(<span class="st">"href"</span>)]
+tables = soup.<span class="fn">find_all</span>(<span class="st">"table"</span>)
+
+<span class="cm"># Easiest way to get a table into pandas</span>
+dfs = pd.<span class="fn">read_html</span>(r.text)    <span class="cm"># returns list of DataFrames</span>
+df  = dfs[<span class="nu">0</span>]                  <span class="cm"># first table on the page</span>
+df.<span class="fn">to_csv</span>(<span class="st">"scraped.csv"</span>, index=<span class="kw">False</span>)
+
+<span class="cm"># Fetch JSON API</span>
+data = requests.<span class="fn">get</span>(<span class="st">"https://api.example.com/data"</span>).<span class="fn">json</span>()
+<span class="fn">print</span>(data[<span class="st">"results"</span>])
+<div class="lang-label">python</div></code></pre>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     16 — MACHINE LEARNING
+════════════════════════════════════════════ -->
+<div class="section" id="ml">
+  <div class="section-header">
+    <span class="section-num">16</span>
+    <h2>Machine learning</h2>
+  </div>
+
+  <div class="lib-card">
+    <div class="lib-header">
+      <span class="lib-badge">scikit-learn</span>
+      <h3>Classical ML in ~10 lines.</h3>
+    </div>
+    <p class="lib-desc">Regression, classification, clustering — all with the same fit/predict interface. Good for tabular data analysis and prediction tasks.</p>
+    <span class="install">pip install scikit-learn</span>
+    <pre><code><span class="kw">from</span> sklearn.linear_model <span class="kw">import</span> LinearRegression
+<span class="kw">from</span> sklearn.model_selection <span class="kw">import</span> train_test_split
+<span class="kw">from</span> sklearn.metrics <span class="kw">import</span> mean_squared_error
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="cm"># Data: predict loss from frequency</span>
+X = np.<span class="fn">array</span>([[<span class="nu">100</span>],[<span class="nu">200</span>],[<span class="nu">400</span>],[<span class="nu">800</span>],[<span class="nu">1600</span>],[<span class="nu">3200</span>]])
+y = np.<span class="fn">array</span>([<span class="nu">0.5</span>, <span class="nu">1.1</span>, <span class="nu">2.3</span>, <span class="nu">4.8</span>, <span class="nu">9.5</span>, <span class="nu">18.2</span>])
+
+<span class="cm"># Split into train / test sets</span>
+X_train, X_test, y_train, y_test = <span class="fn">train_test_split</span>(
+    X, y, test_size=<span class="nu">0.2</span>, random_state=<span class="nu">42</span>
+)
+
+<span class="cm"># Train model</span>
+model = <span class="fn">LinearRegression</span>()
+model.<span class="fn">fit</span>(X_train, y_train)
+
+<span class="cm"># Predict</span>
+predictions = model.<span class="fn">predict</span>(X_test)
+<span class="fn">print</span>(<span class="st">f"MSE: </span>{<span class="fn">mean_squared_error</span>(y_test, predictions):.4f}<span class="st">"</span>)
+<span class="fn">print</span>(<span class="st">f"Predict @ 500MHz: </span>{model.<span class="fn">predict</span>([[<span class="nu">500</span>]])[<span class="nu">0</span>]:.2f}<span class="st"> dB"</span>)
+<div class="lang-label">python</div></code></pre>
+  </div>
+
+  <div class="lib-card">
+    <div class="lib-header">
+      <span class="lib-badge">anthropic</span>
+      <h3>Call Claude from Python.</h3>
+    </div>
+    <p class="lib-desc">Use the Anthropic SDK to add AI to any Python script — summarize data, explain code, analyze results, generate reports.</p>
+    <span class="install">pip install anthropic</span>
+    <pre><code><span class="kw">import</span> anthropic
+
+client = anthropic.<span class="fn">Anthropic</span>()  <span class="cm"># reads ANTHROPIC_API_KEY from env</span>
+
+message = client.messages.<span class="fn">create</span>(
+    model=<span class="st">"claude-sonnet-4-20250514"</span>,
+    max_tokens=<span class="nu">1024</span>,
+    messages=[
+        {<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: <span class="st">"Explain insertion loss in 2 sentences."</span>}
+    ]
+)
+
+<span class="fn">print</span>(message.content[<span class="nu">0</span>].text)
+
+<span class="cm"># Analyze measurement data with AI</span>
+data_summary = <span class="st">f"S21 at 1GHz: -4.8dB, at 2GHz: -9.5dB"</span>
+response = client.messages.<span class="fn">create</span>(
+    model=<span class="st">"claude-sonnet-4-20250514"</span>,
+    max_tokens=<span class="nu">512</span>,
+    messages=[{
+        <span class="st">"role"</span>: <span class="st">"user"</span>,
+        <span class="st">"content"</span>: <span class="st">f"Here's my measurement data: </span>{data_summary}<span class="st">. What does this suggest?"</span>
+    }]
+)
+<span class="fn">print</span>(response.content[<span class="nu">0</span>].text)
+<div class="lang-label">python</div></code></pre>
+  </div>
+</div>
+
+<!-- Footer -->
+<div style="border-top:1px solid var(--faint);padding-top:32px;margin-top:48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)">Python Guide · April 2026 · Based on conversation with Claude</div>
+  <div style="font-size:13px;color:var(--muted)">python.org &nbsp;·&nbsp; docs.python.org &nbsp;·&nbsp; pypi.org</div>
+</div>
+
+</div>
+</div>
+
+<script>
+const sections = document.querySelectorAll('.section');
+const navLinks = document.querySelectorAll('nav a');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      const link = document.querySelector(`nav a[href="#${e.target.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

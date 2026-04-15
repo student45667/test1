@@ -1,0 +1,23 @@
+#!/usr/bin/expect -f
+
+set timeout 1
+spawn ssh -p 22 achiomny@10.2.93.42
+
+expect "password:"
+send -- "Ac234234\r"
+# interact
+
+expect Shell>
+send -- "cd /eda/homes/ca01/achiomny/WORKING_FLDR_CA01\r"
+
+expect Shell>
+send -- "./vna\r"
+
+expect Shell>
+send -- "exit\r"
+
+expect eof
+
+
+
+
